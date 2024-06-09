@@ -97,9 +97,11 @@
             fetch('assignments.csv')
                 .then(response => response.text())
                 .then(data => {
+                    console.log("Found CSV");
                     const assignments = data.split('\\n').slice(1);
                     const assignmentsContainer = document.getElementById('assignments');
                     assignments.forEach(assignment => {
+                        console.log("Found Element");
                         const [title, fileURL] = assignment.split(',');
                         const assignmentLink = document.createElement('a');
                         assignmentLink.href = fileURL;

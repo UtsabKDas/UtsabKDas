@@ -98,7 +98,15 @@
                 .then(response => response.text())
                 .then(data => {
                     console.log("Found CSV");
-                    const assignments = data.split('\\n').slice(1);
+                    const assignments = data.split('\n').slice(1);
+                    if(assignments.length > 0)
+                    {
+                        console.log("Found elements");
+                    }
+                    else
+                    {
+                        console.log("No elements found");
+                    }
                     const assignmentsContainer = document.getElementById('assignments');
                     assignments.forEach(assignment => {
                         console.log("Found Element");

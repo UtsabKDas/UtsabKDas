@@ -98,26 +98,25 @@
                 .then(response => response.text())
                 .then(data => {
                     console.log("Found CSV");
-                    const assignments = data.split('\n').slice(1);
-                    if(assignments.length > 0)
-                    {
+                    const assignments = data.split('\n').slice(1); // Changed '\\n' to '\n'
+                    if (assignments.length > 0) {
                         console.log("Found elements");
-                    }
-                    else
-                    {
+                    } else {
                         console.log("No elements found");
                     }
                     const assignmentsContainer = document.getElementById('assignments');
                     assignments.forEach(assignment => {
-                        console.log("Found Element");
                         const [title, fileURL] = assignment.split(',');
-                        const assignmentLink = document.createElement('a');
-                        assignmentLink.href = fileURL;
-                        assignmentLink.textContent = title;
-                        assignmentsContainer.appendChild(assignmentLink);
-                        assignmentsContainer.appendChild(document.createElement('br'));
+                        if (title && fileURL) { // Ensure both title and fileURL are present
+                            const assignmentLink = document.createElement('a');
+                            assignmentLink.href = fileURL.trim(); // Trim any extra whitespace
+                            assignmentLink.textContent = title.trim(); // Trim any extra whitespace
+                            assignmentsContainer.appendChild(assignmentLink);
+                            assignmentsContainer.appendChild(document.createElement('br'));
+                        }
                     });
-                });
+                })
+                .catch(error => console.error('Error fetching assignments:', error));
         }
     </script>
 </body>

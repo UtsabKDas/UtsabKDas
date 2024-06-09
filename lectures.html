@@ -58,9 +58,6 @@
             padding: 10px;
             margin-top: 30px;
         }
-        .comments {
-            margin-top: 20px;
-        }
     </style>
 </head>
 <body>
@@ -100,15 +97,23 @@
             fetch('lectures.csv')
                 .then(response => response.text())
                 .then(data => {
-                    const lectures = data.split('\\n').slice(1);
+                    console.log("Found CSV");
+                    // Handle different newline characters and trim each line
+                    const lectures = data.split(/\r?\n/).slice(1).map(line => line.trim()).filter(line => line);
+                    console.log(lectures);
                     const lecturesContainer = document.getElementById('lectures');
                     lectures.forEach(lecture => {
-                        const [title, videoURL] = lecture.split(',');
-                        const lectureSection = document.createElement('div');
-                        lectureSection.innerHTML = `<h3>${title}</h3><iframe width="560" height="315" src="${videoURL}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><div class="comments"><h4>Comments</h4><textarea rows="4" cols="50"></textarea></div>`;
-                        lecturesContainer.appendChild(lectureSection);
+                        const [title, videoURL] = lecture.split(',').map(part => part.trim());
+                        if (title && videoURL) { // Ensure both title and videoURL are present
+                            const lectureLink = document.createElement('a');
+                            lectureLink.href = `lecture.html?video=${encodeURIComponent(videoURL)}`;
+                            lectureLink.textContent = title;
+                            lecturesContainer.appendChild(lectureLink);
+                            lecturesContainer.appendChild(document.createElement('br'));
+                        }
                     });
-                });
+                })
+                .catch(error => console.error('Error fetching lectures:', error));
         }
     </script>
 </body>

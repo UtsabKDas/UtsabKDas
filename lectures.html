@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lecture - Low Level Programming Fundamentals</title>
+    <title>Lectures - Low Level Programming Fundamentals</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -58,10 +58,6 @@
             padding: 10px;
             margin-top: 30px;
         }
-        iframe {
-            width: 100%;
-            height: 500px;
-        }
     </style>
 </head>
 <body>
@@ -82,9 +78,9 @@
     </header>
 
     <div class="container">
-        <section class="main" id="lecture">
-            <h2>Lecture Video</h2>
-            <iframe id="videoFrame" src="" frameborder="0" allowfullscreen></iframe>
+        <section class="main" id="lectures">
+            <h2>Lectures</h2>
+            <!-- This will be dynamically filled with lecture links from a CSV -->
         </section>
     </div>
 
@@ -94,16 +90,30 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const videoURL = urlParams.get('video');
-            if (videoURL) {
-                const videoFrame = document.getElementById('videoFrame');
-                // Assuming the URL is directly embeddable (e.g., a YouTube link)
-                videoFrame.src = videoURL;
-            } else {
-                document.getElementById('lecture').innerHTML = '<p>No video URL provided.</p>';
-            }
+            fetchLectures();
         });
+
+        function fetchLectures() {
+            fetch('lectures.csv')
+                .then(response => response.text())
+                .then(data => {
+                    console.log("Found CSV");
+                    const lectures = data.split(/\r?\n/).slice(1).map(line => line.trim()).filter(line => line);
+                    console.log(lectures);
+                    const lecturesContainer = document.getElementById('lectures');
+                    lectures.forEach(lecture => {
+                        const [title, videoURL] = lecture.split(',').map(part => part.trim());
+                        if (title && videoURL) {
+                            const lectureLink = document.createElement('a');
+                            lectureLink.href = `lecture.html?video=${encodeURIComponent(videoURL)}`;
+                            lectureLink.textContent = title;
+                            lecturesContainer.appendChild(lectureLink);
+                            lecturesContainer.appendChild(document.createElement('br'));
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching lectures:', error));
+        }
     </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact - Low Level Programming Fundamentals</title>
+    <title>Lectures - Low Level Programming Fundamentals</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -58,6 +58,9 @@
             padding: 10px;
             margin-top: 30px;
         }
+        .comments {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -68,9 +71,9 @@
                 <ul>
                     <li><a href="index.html">Home</a></li>
                     <li><a href="syllabus.html">Syllabus</a></li>
-                    <li><a href="lectures.html">Lectures</a></li>
+                    <li class="active"><a href="lectures.html">Lectures</a></li>
                     <li><a href="assignments.html">Assignments</a></li>
-                    <li class="active"><a href="contact.html">Contact</a></li>
+                    <li><a href="contact.html">Contact</a></li>
                     <li><a href="forum.html">Forum</a></li>
                 </ul>
             </nav>
@@ -78,22 +81,35 @@
     </header>
 
     <div class="container">
-        <section class="main">
-            <h2>Contact</h2>
-            <form action="mailto:your-email@example.com" method="post" enctype="text/plain">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name"><br><br>
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email"><br><br>
-                <label for="message">Message:</label><br>
-                <textarea id="message" name="message" rows="10" cols="30"></textarea><br><br>
-                <input type="submit" value="Submit">
-            </form>
+        <section class="main" id="lectures">
+            <h2>Lectures</h2>
+            <!-- This will be dynamically filled with lecture links from a CSV -->
         </section>
     </div>
 
     <footer>
         <p>Course Instructor: Utsab Das</p>
     </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetchLectures();
+        });
+
+        function fetchLectures() {
+            fetch('lectures.csv')
+                .then(response => response.text())
+                .then(data => {
+                    const lectures = data.split('\\n').slice(1);
+                    const lecturesContainer = document.getElementById('lectures');
+                    lectures.forEach(lecture => {
+                        const [title, videoURL] = lecture.split(',');
+                        const lectureSection = document.createElement('div');
+                        lectureSection.innerHTML = `<h3>${title}</h3><iframe width="560" height="315" src="${videoURL}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><div class="comments"><h4>Comments</h4><textarea rows="4" cols="50"></textarea></div>`;
+                        lecturesContainer.appendChild(lectureSection);
+                    });
+                });
+        }
+    </script>
 </body>
 </html>

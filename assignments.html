@@ -3,31 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assignments - Basic Website</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Assignments - Low Level Programming Fundamentals</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #77d7ff 3px solid;
+        }
+        header a {
+            color: #fff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+        header ul {
+            padding: 0;
+            list-style: none;
+        }
+        header ul li {
+            float: left;
+            display: inline;
+            padding: 0 20px 0 20px;
+        }
+        header ul li.active a {
+            background-color: #77d7ff;
+            color: #333;
+            border-radius: 5px;
+            padding: 5px 10px;
+        }
+        .main {
+            padding: 15px;
+            background: #fff;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        footer {
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            margin-top: 30px;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <h1>Welcome to Our Website</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="videos.html">Videos</a></li>
-                <li><a href="assignments.html">Assignments</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-        </nav>
+        <div class="container">
+            <h1>Low Level Programming Fundamentals</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="syllabus.html">Syllabus</a></li>
+                    <li><a href="lectures.html">Lectures</a></li>
+                    <li class="active"><a href="assignments.html">Assignments</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="forum.html">Forum</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
-    <section>
-        <h2>Assignments</h2>
-        <ul>
-            <li><a href="files/assignment1.pdf" download>Assignment 1</a></li>
-            <li><a href="files/assignment2.pdf" download>Assignment 2</a></li>
-            <!-- Add more assignment links here -->
-        </ul>
-    </section>
+
+    <div class="container">
+        <section class="main" id="assignments">
+            <h2>Assignments</h2>
+            <!-- This will be dynamically filled with assignment links from a CSV -->
+        </section>
+    </div>
+
     <footer>
-        <p>&copy; 2024 Basic Website. All Rights Reserved.</p>
+        <p>Course Instructor: Utsab Das</p>
     </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetchAssignments();
+        });
+
+        function fetchAssignments() {
+            fetch('assignments.csv')
+                .then(response => response.text())
+                .then(data => {
+                    const assignments = data.split('\\n').slice(1);
+                    const assignmentsContainer = document.getElementById('assignments');
+                    assignments.forEach(assignment => {
+                        const [title, fileURL] = assignment.split(',');
+                        const assignmentLink = document.createElement('a');
+                        assignmentLink.href = fileURL;
+                        assignmentLink.textContent = title;
+                        assignmentsContainer.appendChild(assignmentLink);
+                        assignmentsContainer.appendChild(document.createElement('br'));
+                    });
+                });
+        }
+    </script>
 </body>
 </html>

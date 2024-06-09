@@ -98,19 +98,16 @@
                 .then(response => response.text())
                 .then(data => {
                     console.log("Found CSV");
-                    const assignments = data.split('\n').slice(1); // Changed '\\n' to '\n'
-                    if (assignments.length > 0) {
-                        console.log("Found elements");
-                    } else {
-                        console.log("No elements found");
-                    }
+                    // Handle different newline characters and trim each line
+                    const assignments = data.split(/\r?\n/).slice(1).map(line => line.trim()).filter(line => line);
+                    console.log(assignments);
                     const assignmentsContainer = document.getElementById('assignments');
                     assignments.forEach(assignment => {
-                        const [title, fileURL] = assignment.split(',');
+                        const [title, fileURL] = assignment.split(',').map(part => part.trim());
                         if (title && fileURL) { // Ensure both title and fileURL are present
                             const assignmentLink = document.createElement('a');
-                            assignmentLink.href = fileURL.trim(); // Trim any extra whitespace
-                            assignmentLink.textContent = title.trim(); // Trim any extra whitespace
+                            assignmentLink.href = fileURL;
+                            assignmentLink.textContent = title;
                             assignmentsContainer.appendChild(assignmentLink);
                             assignmentsContainer.appendChild(document.createElement('br'));
                         }
